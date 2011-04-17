@@ -4,3 +4,4 @@ trunk/src/**.sdf
 *.vcxproj.user
 trunk/src/**/ipch
 trunk/src/**.suo
+trunk/src/curve/curve/ReadMe.txt
