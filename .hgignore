@@ -1,0 +1,6 @@
+syntax: glob
+trunk/src/**.sdf
+**/Debug
+*.vcxproj.user
+trunk/src/**/ipch
+trunk/src/**.suo
