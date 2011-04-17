@@ -28,8 +28,8 @@ ATOM MainWnd::registerCls(){
 	wcex.lpszClassName = CLASS_NAME;
 	wcex.hInstance = THIS_INSTANCE;
 	wcex.lpszMenuName = NULL;
-	wcex.lpfnWndProc = DefWindowProc;	//	ha ha ha ha!!!!
-										//	mail me (blragnel@yahoo.co.in) and I'll tell you
+	wcex.lpfnWndProc = DefWindowProc;	//	we set the actual window procedure later
+										//	mail me (agnel.kurian at gmail.com) for more
 
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
@@ -47,7 +47,7 @@ HWND MainWnd::create(DWORD dwExStyle, LPCTSTR lpWindowName, DWORD dwStyle,
 		int x, int y, int nWidth, int nHeight, HWND hWndParent,
 		HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam){
 
-	hwnd = CreateWindowEx(0, CLASS_NAME, _T("curve  - blragnel@yahoo.co.in"), WS_OVERLAPPEDWINDOW,
+	hwnd = CreateWindowEx(0, CLASS_NAME, _T("curve  - agnel.kurian at gmail.com"), WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, THIS_INSTANCE, NULL);
 	SetWindowLong(hwnd, GWL_USERDATA, (LONG) this);
 	SetWindowLong(hwnd, GWL_WNDPROC, (LONG) mainWndProc);

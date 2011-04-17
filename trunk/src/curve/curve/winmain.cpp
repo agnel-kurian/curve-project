@@ -24,7 +24,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;
 	}
 
-	if(mainWnd.create(0, _T("curve - blragnel@yahoo.co.in"), WS_OVERLAPPEDWINDOW,
+	if(mainWnd.create(0, _T("curve - agnel.kurian at gmail.com"), WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, THIS_INSTANCE, NULL) == NULL){
 		MessageBox(NULL, _T("Unable to create main window"), _T("curve"), MB_OK);
 		return -1;

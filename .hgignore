@@ -1,7 +1,10 @@
 syntax: glob
 trunk/src/**.sdf
-**/Debug
 *.vcxproj.user
 trunk/src/**/ipch
 trunk/src/**.suo
 trunk/src/curve/curve/ReadMe.txt
+trunk/src/curve/Release
+trunk/src/curve/curve/Release
+trunk/src/curve/Debug
+trunk/src/curve/curve/Debug

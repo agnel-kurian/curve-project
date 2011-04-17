@@ -33,7 +33,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,27,74,50,14
     ICON            IDI_CURVE,IDC_STATIC,41,7,20,20
-    CTEXT           "curve plotter\n\nAgnel CJ Kurian\nblragnel@yahoo.co.in",
+    CTEXT           "curve plotter\n\nAgnel CJ Kurian\nagnel.kurian at gmail.com",
                     IDC_STATIC,7,34,87,38
 END
 
