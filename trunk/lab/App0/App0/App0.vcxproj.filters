@@ -15,7 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
     <None Include="small.ico">
       <Filter>Resource Files</Filter>
     </None>
@@ -36,12 +35,24 @@
     <ClInclude Include="App0.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseWnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app0_exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="App0.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app0_exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
