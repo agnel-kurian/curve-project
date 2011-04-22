@@ -1,10 +1,14 @@
 syntax: glob
-trunk/src/**.sdf
 *.vcxproj.user
 trunk/src/**/ipch
-trunk/src/**.suo
 trunk/src/curve/curve/ReadMe.txt
-trunk/src/curve/Release
-trunk/src/curve/curve/Release
-trunk/src/curve/Debug
-trunk/src/curve/curve/Debug
+trunk/lab/App0/App0/ReadMe.txt
+trunk/src/**/Release
+trunk/lab/**/Release
+trunk/lab/**/Debug
+trunk/src/**/Debug
+trunk/src/**.sdf
+trunk/lab/**.sdf
+trunk/src/**.suo
+trunk/lab/**.suo
+trunk/lab/**/ipch
