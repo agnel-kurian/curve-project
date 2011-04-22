@@ -113,7 +113,7 @@ namespace App0 {
     LONG_PTR ptr = ::GetWindowLongPtr(hwnd, GWL_USERDATA);
     BaseWnd* window = reinterpret_cast<BaseWnd*>(ptr);
     if(window == 0)
-      return ::DefWindowProc(hwnd, msg, wParam, lParam);
+      throw app0_exception(_T("Object pointer is 0."));
 
     return window->WndProc(msg, wParam, lParam);
   }
