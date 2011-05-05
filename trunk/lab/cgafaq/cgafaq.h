@@ -81,12 +81,8 @@ namespace cgafaq {
       return orientation(a, b, c);
   }
   
-  //	the following is based on code from
-  //	http://www.cgal.org/Manual/3.4/include/CGAL/constructions/kernel_ftC2.h
   template<typename T>	
   void line_equation(const P2<T>& p, const P2<T>& q, T* a, T* b, T* c){
-    // The horizontal and vertical line get a special treatment
-    // in order to make the intersection code robust for doubles 
     if(p.y == q.y){
       *a = 0 ;
       if(q.x > p.x){
