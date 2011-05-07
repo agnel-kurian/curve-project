@@ -41,21 +41,21 @@ namespace cgafaq {
   
   template<typename T>
   int lower_right(const typename types<T>::polygon& polygon){
-      int m = 0;
+    int m = 0;
 
-      P2<T> p0 = polygon[0];
+    P2<T> p0 = polygon[0];
 
-      P2<T> min = p0;
+    P2<T> min = p0;
 
-      for(int i = 0, n = polygon.size(); i < n; i++) {
-        P2<T> pi = polygon[i];
-        if((pi.y < min.y) || ((pi.y == min.y) && (pi.x > min.x))) {
-          m = i;
-          min.x = pi.x;
-          min.y = pi.y;
-        }
+    for(int i = 0, n = polygon.size(); i < n; i++) {
+      P2<T> pi = polygon[i];
+      if((pi.y < min.y) || ((pi.y == min.y) && (pi.x > min.x))) {
+        m = i;
+        min.x = pi.x;
+        min.y = pi.y;
       }
-      return m;
+    }
+    return m;
   }
   
   template<typename T>
@@ -70,15 +70,15 @@ namespace cgafaq {
   
   template<typename T>
   T orientation(const typename types<T>::polygon& polygon){
-      int m = lower_right(polygon);
+    int m = lower_right(polygon);
 
-      int n = polygon.size();
-      int m1 = (m + (n - 1)) % n; 
-      P2<T>& a = polygon[m1];
-      P2<T>& b = polygon[m];
-      P2<T>& c = polygon[(m + 1) % n];
+    int n = polygon.size();
+    int m1 = (m + (n - 1)) % n; 
+    P2<T>& a = polygon[m1];
+    P2<T>& b = polygon[m];
+    P2<T>& c = polygon[(m + 1) % n];
 
-      return orientation(a, b, c);
+    return orientation(a, b, c);
   }
   
   template<typename T>	
