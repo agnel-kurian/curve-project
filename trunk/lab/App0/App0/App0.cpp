@@ -15,8 +15,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                      LPTSTR    lpCmdLine,
                      int       nCmdShow)
 try {
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
+  UNREFERENCED_PARAMETER(hPrevInstance);
+  UNREFERENCED_PARAMETER(lpCmdLine);
 
   App0::BaseWnd window;
 
@@ -25,18 +25,18 @@ try {
   window.Show(nCmdShow);
   window.Update();
 
-	// Initialize global strings
-	// Main message loop:
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		//if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-		//{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+  // Initialize global strings
+  // Main message loop:
+  while (GetMessage(&msg, NULL, 0, 0))
+  {
+    //if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+    //{
+      TranslateMessage(&msg);
+      DispatchMessage(&msg);
 //		}
-	}
+  }
 
-	return (int) msg.wParam;
+  return (int) msg.wParam;
 }
 catch(App0::app0_exception& ex){
   ::MessageBox(0, ex.message(), APP_CAPTION, MB_OK);

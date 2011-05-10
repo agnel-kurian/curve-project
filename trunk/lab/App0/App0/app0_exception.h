@@ -2,8 +2,7 @@
 
 namespace App0 {
 
-  class app0_exception
-  {
+  class app0_exception {
     TCHAR* msg;
 
   public:

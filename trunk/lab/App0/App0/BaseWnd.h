@@ -8,8 +8,7 @@ namespace App0 {
 
   extern TCHAR* WINDOW_TITLE;
 
-	class BaseWnd
-	{
+  class BaseWnd {
     static ATOM wndClassAtom;
 
   protected:
@@ -19,10 +18,10 @@ namespace App0 {
     static ATOM Register(); 
 
     virtual LRESULT WndProc(UINT msg, WPARAM wParam, LPARAM lParam);
-	public:
+  public:
 
 
-		BaseWnd(void);
+    BaseWnd(void);
 
     void OnWmClose(HWND hwnd);
     void OnWmDestroy(HWND hwnd);
@@ -30,10 +29,10 @@ namespace App0 {
     BOOL Show(int nCmdShow);
     BOOL Update();
 
-		virtual ~BaseWnd(void);
+    virtual ~BaseWnd(void);
 
     static LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	};
+  };
 
   //  initial window proc.
   //  for WM_CREATE, attaches the c++ object to the hwnd and

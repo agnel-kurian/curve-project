@@ -15,8 +15,8 @@ namespace App0 {
   ATOM BaseWnd::wndClassAtom = 0;
   TCHAR* BaseWnd::lpszClassName = _T("{4AEF5BBD-220E-481D-8433-1EB33FFA14CB}");
 
-	BaseWnd::BaseWnd(void): hwnd(0)
-	{
+  BaseWnd::BaseWnd(void): hwnd(0)
+  {
     if(wndClassAtom == 0){
       if(Register() == 0)
         throw app0_exception(ERR_CLASS_REGISTRATION_FAILED);
@@ -29,7 +29,7 @@ namespace App0 {
 
     if(hwnd == 0)
       throw app0_exception(ERR_WINDOW_CREATION_FAILED);
-	}
+  }
 
   BOOL BaseWnd::Show(int nCmdShow){
     return ::ShowWindow(hwnd, nCmdShow);
@@ -39,9 +39,9 @@ namespace App0 {
     return UpdateWindow(hwnd);
   }
 
-	BaseWnd::~BaseWnd(void)
-	{
-	}
+  BaseWnd::~BaseWnd(void)
+  {
+  }
 
   ATOM BaseWnd::Register(){
     WNDCLASSEX wcex;
