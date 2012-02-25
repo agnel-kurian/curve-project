@@ -6,7 +6,7 @@ gdk_window_invalidate_rect will invalidate entire window if second arg
 
 expose:
   draw all Entities
-  draw current entity
+  draw current entity and line to mouse location
 
 create renderer classes which can be overridden for cairo, gdi+
 

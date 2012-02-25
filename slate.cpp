@@ -203,6 +203,7 @@ gboolean gtk_slate_button_release (GtkWidget	     *widget,
          GdkEventButton      *event){
 
   GtkSlate *slate = GTK_SLATE(widget);
+  int npoints;
 
   if(event->button == 1){
     cairo_t *cr;
@@ -214,13 +215,20 @@ gboolean gtk_slate_button_release (GtkWidget	     *widget,
     gdk_window_invalidate_rect(widget->window, NULL, FALSE);
   }
   else if(event->button == 3){
+    npoints = slate->curr_polyline.points.size();
+
     if(slate->curr_polyline.points.size() > 1){
       slate->ents.lines.push_back(polyline_2d<sfloat>());
       slate->curr_polyline.points.swap(
-                                       slate->ents.lines.
-                                       back().points);
+         slate->ents.lines.
+         back().points);
       gdk_window_invalidate_rect(widget->window, NULL, FALSE);
     }
+    else if(npoints == 1){
+      slate->curr_polyline.points.clear();
+      gdk_window_invalidate_rect(widget->window, NULL, FALSE);
+    }
+
   }
 
   return TRUE;
