@@ -154,6 +154,12 @@ gtk_slate_expose(GtkWidget *widget,
 
     }
 
+    GdkModifierType mods;
+    gint x, y;
+    gdk_window_get_pointer(widget->window, &x, &y, &mods);
+    double dx = (double)x, dy = (double)y;
+    cairo_device_to_user(cr, &dx, &dy);
+    cairo_line_to(cr, dx, dy);
     cairo_stroke(cr);
 
   }
@@ -186,15 +192,9 @@ static gboolean
 gtk_slate_motion_notify(GtkWidget        *widget,
   GdkEventMotion         *event)
 {
-  GdkModifierType state;
-  int x, y;
-  if(event->is_hint)
-    gdk_window_get_pointer(event->window, &x, &y, &state);
-  else {
-    x = event->x;
-    y = event->y;
-    state = (GdkModifierType) event->state;
-  }
+  GtkSlate *slate = GTK_SLATE(widget);
+  if(slate->curr_polyline.points.size() > 0)
+    gdk_window_invalidate_rect(widget->window, NULL, FALSE);
 
   return FALSE;
 }
@@ -202,7 +202,7 @@ gtk_slate_motion_notify(GtkWidget        *widget,
 gboolean gtk_slate_button_release (GtkWidget	     *widget,
          GdkEventButton      *event){
 
-  GtkSlate *slate = (GtkSlate*) widget;
+  GtkSlate *slate = GTK_SLATE(widget);
 
   if(event->button == 1){
     cairo_t *cr;
