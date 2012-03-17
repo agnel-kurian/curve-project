@@ -32,6 +32,8 @@ struct _GtkSlate
   double scale;
   double translate_x;
   double translate_y;
+  double old_translate_x;
+  double old_translate_y;
   gpointer GSEAL (slate_data);
   Entities<sfloat> ents;
   gboolean is_panning;
@@ -54,6 +56,7 @@ struct _GtkSlateClass
 
 GType      gtk_slate_get_type   (void) G_GNUC_CONST;
 GtkWidget* gtk_slate_new        (void);
+void gtk_slate_device_to_user(GtkWidget *widget, double *x, double *y);
 
 #ifndef GTK_DISABLE_DEPRECATED
 void       gtk_slate_size       (GtkSlate      *slate,
