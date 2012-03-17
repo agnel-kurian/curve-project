@@ -1,5 +1,6 @@
 
 #include "slate.h"
+#include <assert.h>
 
 static void gtk_slate_realize       (GtkWidget           *widget);
 static void gtk_slate_size_allocate (GtkWidget           *widget,
@@ -9,8 +10,12 @@ static gboolean gtk_slate_expose    (GtkWidget           *widget,
 static void gtk_slate_send_configure (GtkSlate           *slate);
 static gboolean gtk_slate_motion_notify(GtkWidget        *widget,
                                         GdkEventMotion         *event);
+static gboolean gtk_slate_button_press (GtkWidget *widget,
+                                        GdkEventButton *event);
 static gboolean gtk_slate_button_release (GtkWidget	     *widget,
                                       GdkEventButton      *event);
+static gboolean gtk_slate_scroll_event(GtkWidget           *widget,
+					 GdkEventScroll      *event);
 
 G_DEFINE_TYPE (GtkSlate, gtk_slate, GTK_TYPE_WIDGET)
 
@@ -24,12 +29,18 @@ gtk_slate_class_init (GtkSlateClass *klass)
   widget_class->expose_event = gtk_slate_expose;
   widget_class->motion_notify_event = gtk_slate_motion_notify;
   widget_class->button_release_event = gtk_slate_button_release;
+  widget_class->button_press_event = gtk_slate_button_press;
+  widget_class->scroll_event = gtk_slate_scroll_event;
 }
 
 static void
 gtk_slate_init (GtkSlate *slate)
 {
   slate->slate_data = NULL;
+  slate->scale = 1.0;
+  slate->translate_x = 0.0;
+  slate->translate_y = 0.0;
+  slate->is_panning = FALSE;
 }
 
 GtkWidget*
@@ -78,7 +89,7 @@ gtk_slate_realize (GtkWidget *widget)
         gtk_widget_get_events (widget) |
         GDK_EXPOSURE_MASK | GDK_POINTER_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK |
-        GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
+        GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_SCROLL_MASK;
 
       attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
 
@@ -117,13 +128,20 @@ static gboolean
 gtk_slate_expose(GtkWidget *widget,
     GdkEventExpose *event)
 {
+  GtkSlate *slate = GTK_SLATE(widget);
   cairo_t *cr;
   cr = gdk_cairo_create(widget->window);
-
-  cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
   cairo_set_line_width(cr, 1.0);
 
-  GtkSlate *slate = (GtkSlate*) widget;
+  cairo_save(cr);
+  cairo_matrix_t mx;
+  cairo_matrix_init_identity(&mx);
+  cairo_matrix_scale(&mx, slate->scale, slate->scale);
+  cairo_matrix_translate(&mx, slate->translate_x, slate->translate_y);
+  cairo_set_matrix(cr, &mx);
+
+  cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+
   vector< polyline_2d<sfloat> > lines = slate->ents.lines;
   for(int i = 0, n = lines.size(); i < n; ++i){
     vector< point_2d<sfloat> >& points = lines[i].points;
@@ -136,9 +154,6 @@ gtk_slate_expose(GtkWidget *widget,
       cairo_line_to(cr, (double)pi.x, (double)pi.y);
 
     }
-
-    cairo_stroke(cr);
-
   }
 
   vector< point_2d<sfloat> >& points = slate->curr_polyline.points;
@@ -160,10 +175,11 @@ gtk_slate_expose(GtkWidget *widget,
     double dx = (double)x, dy = (double)y;
     cairo_device_to_user(cr, &dx, &dy);
     cairo_line_to(cr, dx, dy);
-    cairo_stroke(cr);
 
   }
 
+  cairo_restore(cr);
+  cairo_stroke(cr);
   cairo_destroy(cr);
 
   return FALSE;
@@ -193,10 +209,25 @@ gtk_slate_motion_notify(GtkWidget        *widget,
   GdkEventMotion         *event)
 {
   GtkSlate *slate = GTK_SLATE(widget);
-  if(slate->curr_polyline.points.size() > 0)
+
+  if(slate->is_panning){
+    //slate->
+  }
+  else  if(slate->curr_polyline.points.size() > 0)
     gdk_window_invalidate_rect(widget->window, NULL, FALSE);
 
   return FALSE;
+}
+
+gboolean gtk_slate_button_press (GtkWidget	     *widget,
+         GdkEventButton      *event){
+  GtkSlate *slate = GTK_SLATE(widget);
+  if(event->button == 2){
+    slate->is_panning = TRUE;
+    slate->pan_start_x = event->x;
+    slate->pan_start_y = event->y;
+  }
+  return TRUE;
 }
 
 gboolean gtk_slate_button_release (GtkWidget	     *widget,
@@ -208,11 +239,19 @@ gboolean gtk_slate_button_release (GtkWidget	     *widget,
   if(event->button == 1){
     cairo_t *cr;
     cr = gdk_cairo_create(widget->window);
+    cairo_matrix_t mx;
+    cairo_matrix_init_identity(&mx);
+    cairo_matrix_scale(&mx, slate->scale, slate->scale);
+    cairo_matrix_translate(&mx, slate->translate_x, slate->translate_y);
+    cairo_set_matrix(cr, &mx);
     double dx = event->x, dy = event->y;
     cairo_device_to_user(cr, &dx, &dy);
     slate->curr_polyline.points.push_back(point_2d<sfloat>((sfloat)dx, (sfloat)dy));
     cairo_destroy(cr);
     gdk_window_invalidate_rect(widget->window, NULL, FALSE);
+  }
+  else if(event->button == 2){
+    slate->is_panning = FALSE;
   }
   else if(event->button == 3){
     npoints = slate->curr_polyline.points.size();
@@ -230,6 +269,47 @@ gboolean gtk_slate_button_release (GtkWidget	     *widget,
     }
 
   }
+  else
+    fprintf(stderr, "button %d\n", event->button);
 
   return TRUE;
+}
+
+gboolean gtk_slate_scroll_event(GtkWidget           *widget,
+					 GdkEventScroll      *event){
+
+  GtkSlate *slate = GTK_SLATE(widget);
+
+  cairo_matrix_t mx1;
+  cairo_matrix_init_identity(&mx1);
+  cairo_matrix_scale(&mx1, slate->scale, slate->scale);
+  cairo_matrix_translate(&mx1, slate->translate_x, slate->translate_y);
+  cairo_matrix_invert(&mx1);
+
+  double x1 = event->x, y1 = event->y;
+  cairo_matrix_transform_point(&mx1, &x1, &y1);
+
+  if(event->direction == GDK_SCROLL_UP){
+    slate->scale *= 1.1;
+    g_print("UP\n");
+  }
+  else if(event->direction == GDK_SCROLL_DOWN){
+    slate->scale /= 1.1;
+    g_print("DOWN\n");
+  }
+  else
+    assert(0);
+
+  cairo_matrix_t mx2;
+  cairo_matrix_init_identity(&mx2);
+  cairo_matrix_scale(&mx2, slate->scale, slate->scale);
+  cairo_matrix_translate(&mx2, slate->translate_x, slate->translate_y);
+  cairo_matrix_invert(&mx2);
+  double x2 = event->x, y2 = event->y;
+  cairo_matrix_transform_point(&mx2, &x2, &y2);
+  slate->translate_x += x2 - x1;
+  slate->translate_y += y2 - y1;
+
+  gdk_window_invalidate_rect(widget->window, NULL, FALSE);
+  return FALSE;
 }

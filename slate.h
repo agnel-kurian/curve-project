@@ -29,9 +29,14 @@ struct _GtkSlate
 {
   GtkWidget widget;
 
+  double scale;
+  double translate_x;
+  double translate_y;
   gpointer GSEAL (slate_data);
   Entities<sfloat> ents;
-
+  gboolean is_panning;
+  double pan_start_x;
+  double pan_start_y;
   polyline_2d<sfloat> curr_polyline;
 };
 
