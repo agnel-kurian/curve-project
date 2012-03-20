@@ -4,13 +4,13 @@
 
 #include <gtk/gtk.h>
 
-#include "primitives.h"
+#include "../cadcore/cad_document.h"
 #include <vector>
 
-template <typename T> class Entities {
-public:
-  vector< polyline_2d<T> > lines;
-};
+//template <typename T> class Entities {
+//public:
+//  vector< polyline_2d<T> > lines;
+//};
 
 G_BEGIN_DECLS
 
@@ -25,6 +25,12 @@ typedef double sfloat;
 typedef struct _GtkSlate       GtkSlate;
 typedef struct _GtkSlateClass  GtkSlateClass;
 
+using cad_core::cad_document;
+using cad_core::polyline_2d;
+using cad_core::point_2d;
+
+using std::vector;
+
 struct _GtkSlate
 {
   GtkWidget widget;
@@ -35,7 +41,7 @@ struct _GtkSlate
   double old_translate_x;
   double old_translate_y;
   gpointer GSEAL (slate_data);
-  Entities<sfloat> ents;
+  cad_document<sfloat> ents;
   gboolean is_panning;
   double pan_start_x;
   double pan_start_y;

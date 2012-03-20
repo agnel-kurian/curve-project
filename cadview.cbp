@@ -39,10 +39,6 @@
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Unit filename="notes.txt" />
-		<Unit filename="primitives.h" />
-		<Unit filename="s2">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
 		<Unit filename="slate.cpp" />
 		<Unit filename="slate.h" />
 		<Extensions>

@@ -142,7 +142,7 @@ gtk_slate_expose(GtkWidget *widget,
 
   cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
 
-  vector< polyline_2d<sfloat> > lines = slate->ents.lines;
+  vector< polyline_2d<sfloat> > lines = slate->ents.get_polylines();
   for(int i = 0, n = lines.size(); i < n; ++i){
     vector< point_2d<sfloat> >& points = lines[i].points;
     point_2d<sfloat>& p0 = points[0];
@@ -283,10 +283,9 @@ gboolean gtk_slate_button_release (GtkWidget	     *widget,
     npoints = slate->curr_polyline.points.size();
 
     if(slate->curr_polyline.points.size() > 1){
-      slate->ents.lines.push_back(polyline_2d<sfloat>());
-      slate->curr_polyline.points.swap(
-         slate->ents.lines.
-         back().points);
+      int ipoly = slate->ents.add_polyline(polyline_2d<sfloat>());
+      polyline_2d<sfloat>& pline = slate->ents.get_polyline(ipoly);
+      slate->curr_polyline.points.swap(pline.points);
       gdk_window_invalidate_rect(widget->window, NULL, FALSE);
     }
     else if(npoints == 1){

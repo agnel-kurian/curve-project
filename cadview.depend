@@ -2319,9 +2319,9 @@
 	<gtk/gtk.h>
 	"slate.h"
 
-1332023004 /home/agnel/projects/cpp/cadview/slate.h
+1332201239 /home/agnel/projects/cpp/cadview/slate.h
 	<gtk/gtk.h>
-	"primitives.h"
+	"../cadcore/cad_document.h"
 	<vector>
 
 1327999322 source:/home/agnel/projects/cpp/cadview/slate.C
@@ -2331,10 +2331,16 @@
 	<gtk/gtk.h>
 	"slate.h"
 
-1332027657 source:/home/agnel/projects/cpp/cadview/slate.cpp
+1332204539 source:/home/agnel/projects/cpp/cadview/slate.cpp
 	"slate.h"
 	<assert.h>
 
 1329407031 /home/agnel/projects/cpp/cadview/primitives.h
+	<vector>
+
+1332204483 /home/agnel/projects/cpp/cadcore/cad_document.h
+	"cad_primitives.h"
+
+1332199924 /home/agnel/projects/cpp/cadcore/cad_primitives.h
 	<vector>
 

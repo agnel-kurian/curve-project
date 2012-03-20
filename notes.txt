@@ -13,7 +13,7 @@ create renderer classes which can be overridden for cairo, gdi+
 //right click ends line
 esc will cancel current command
 enter will complete current command
-spin mouse wheel to zoom in/out
+//spin mouse wheel to zoom in/out
 keyboard event
 acquiring focus
 zoom, pan
