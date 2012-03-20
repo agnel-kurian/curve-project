@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="cad_cairo_graphics.h" open="1" top="0" tabpos="6">
+		<Cursor position="283" topLine="0" />
+	</File>
+	<File name="cad_document.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="80" topLine="0" />
+	</File>
+	<File name="cad_document.h" open="1" top="0" tabpos="3">
+		<Cursor position="167" topLine="0" />
+	</File>
+	<File name="cad_gtk_adaptor.cpp" open="1" top="0" tabpos="10">
+		<Cursor position="107" topLine="0" />
+	</File>
+	<File name="cad_gtk_adaptor.h" open="1" top="1" tabpos="4">
+		<Cursor position="820" topLine="15" />
+	</File>
+	<File name="cad_gui_view.h" open="1" top="0" tabpos="9">
+		<Cursor position="615" topLine="0" />
+	</File>
+	<File name="cad_primitives.h" open="1" top="0" tabpos="2">
+		<Cursor position="619" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>

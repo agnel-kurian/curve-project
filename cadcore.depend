@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1332199941 source:/home/agnel/projects/cpp/cadcore/main.cpp
+	"cad_primitives.h"
+
+1332199924 /home/agnel/projects/cpp/cadcore/cad_primitives.h
+	<vector>
+
+1332213216 source:/home/agnel/projects/cpp/cadcore/cad_document.cpp
+	"cad_primitives.h"
+	"cad_document.h"
+	"cad_gui_view.h"
+
+1332204483 /home/agnel/projects/cpp/cadcore/cad_document.h
+	"cad_primitives.h"
+
+1332213950 /home/agnel/projects/cpp/cadcore/cad_gui_view.h
+	"cad_document.h"
+
