@@ -1,0 +1,14 @@
+syntax: glob
+*.vcxproj.user
+trunk/src/**/ipch
+trunk/src/curve/curve/ReadMe.txt
+trunk/lab/App0/App0/ReadMe.txt
+trunk/src/**/Release
+trunk/lab/**/Release
+trunk/lab/**/Debug
+trunk/src/**/Debug
+trunk/src/**.sdf
+trunk/lab/**.sdf
+trunk/src/**.suo
+trunk/lab/**.suo
+trunk/lab/**/ipch
