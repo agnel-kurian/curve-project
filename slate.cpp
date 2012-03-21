@@ -36,16 +36,17 @@ gtk_slate_class_init (GtkSlateClass *klass)
 static void
 gtk_slate_init (GtkSlate *slate)
 {
-  slate->scale = 1.0;
-  slate->translate_x = 0.0;
-  slate->translate_y = 0.0;
-  slate->is_panning = FALSE;
 }
 
 GtkWidget*
 gtk_slate_new (void)
 {
   return GTK_WIDGET(g_object_new (GTK_TYPE_SLATE, NULL));
+}
+
+void gtk_slate_set_view(GtkWidget *widget, view_type *view){
+  GtkSlate *slate = GTK_SLATE(widget);
+  slate->view = view;
 }
 
 void
@@ -128,59 +129,8 @@ gtk_slate_expose(GtkWidget *widget,
     GdkEventExpose *event)
 {
   GtkSlate *slate = GTK_SLATE(widget);
-  cairo_t *cr;
-  cr = gdk_cairo_create(widget->window);
-  cairo_set_line_width(cr, 1.0);
 
-  cairo_save(cr);
-  cairo_matrix_t mx;
-  cairo_matrix_init_identity(&mx);
-  cairo_matrix_scale(&mx, slate->scale, slate->scale);
-  cairo_matrix_translate(&mx, slate->translate_x, slate->translate_y);
-  cairo_set_matrix(cr, &mx);
-
-  cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-
-  const vector< polyline_2d<sfloat> >& lines =
-    slate->ents.get_polylines();
-  for(int i = 0, n = lines.size(); i < n; ++i){
-    const vector< point_2d<sfloat> >& points = lines[i].points;
-    const point_2d<sfloat>& p0 = points[0];
-    cairo_move_to(cr, (double)p0.x, (double)p0.y);
-    for(int ipoint = 1, npoint = points.size();
-      ipoint < npoint; ++ipoint){
-
-      const point_2d<sfloat>& pi = points[ipoint];
-      cairo_line_to(cr, (double)pi.x, (double)pi.y);
-
-    }
-  }
-
-  vector< point_2d<sfloat> >& points = slate->curr_polyline.points;
-  if(points.size() > 0){
-
-    point_2d<sfloat>& p0 = points[0];
-    cairo_move_to(cr, (double)p0.x, (double)p0.y);
-    for(int ipoint = 1, npoint = points.size();
-      ipoint < npoint; ++ipoint){
-
-      point_2d<sfloat>& pi = points[ipoint];
-      cairo_line_to(cr, (double)pi.x, (double)pi.y);
-
-    }
-
-    GdkModifierType mods;
-    gint x, y;
-    gdk_window_get_pointer(widget->window, &x, &y, &mods);
-    double dx = (double)x, dy = (double)y;
-    cairo_device_to_user(cr, &dx, &dy);
-    cairo_line_to(cr, dx, dy);
-
-  }
-
-  cairo_restore(cr);
-  cairo_stroke(cr);
-  cairo_destroy(cr);
+  slate->view->paint();
 
   return FALSE;
 }
@@ -210,129 +160,69 @@ gtk_slate_motion_notify(GtkWidget        *widget,
 {
   GtkSlate *slate = GTK_SLATE(widget);
 
-  if(slate->is_panning){
-    GdkModifierType mods;
-    gint x, y;
-    if(event->is_hint)
-      gdk_window_get_pointer(widget->window, &x, &y, &mods);
-    else {
-      x = event->x;
-      y = event->y;
-    }
-
-    double dx = (double)x, dy = (double)y;
-    gtk_slate_device_to_user(widget, &dx, &dy);
-
-    slate->translate_x = slate->translate_x + (dx - slate->pan_start_x);
-    slate->translate_y = slate->translate_y + (dy - slate->pan_start_y);
-
-    gdk_window_invalidate_rect(widget->window, NULL, FALSE);
+  GdkModifierType mods;
+  gint x, y;
+  if(event->is_hint)
+    gdk_window_get_pointer(widget->window, &x, &y, &mods);
+  else {
+    x = event->x;
+    y = event->y;
   }
-  else  if(slate->curr_polyline.points.size() > 0)
-    gdk_window_invalidate_rect(widget->window, NULL, FALSE);
+
+  slate->view->mouse_move(x, y);
 
   return FALSE;
+}
+
+cad_core::Mouse_button Mouse_button_from_Gtk(guint gtk_mouse_button){
+  switch(gtk_mouse_button){
+    case 1: return cad_core::Mouse_button_Left;
+    case 2: return cad_core::Mouse_button_Middle;
+    case 3: return cad_core::Mouse_button_Right;
+    default: return cad_core::Mouse_button_None;
+  }
 }
 
 gboolean gtk_slate_button_press (GtkWidget	     *widget,
          GdkEventButton      *event){
   GtkSlate *slate = GTK_SLATE(widget);
-  if(event->button == 2){
-    slate->is_panning = TRUE;
-    slate->pan_start_x = event->x;
-    slate->pan_start_y = event->y;
-    gtk_slate_device_to_user(widget,
-      &slate->pan_start_x, &slate->pan_start_y);
-
-    slate->old_translate_x = slate->translate_x;
-    slate->old_translate_y = slate->translate_y;
-  }
+  cad_core::Mouse_button button = Mouse_button_from_Gtk(event->button);
+  slate->view->mouse_down(button, event->x, event->y);
 
   return TRUE;
-}
-
-void gtk_slate_device_to_user(GtkWidget *widget, double *x, double *y){
-  GtkSlate *slate = GTK_SLATE(widget);
-  cairo_t *cr;
-  cr = gdk_cairo_create(widget->window);
-  cairo_matrix_t mx;
-  cairo_matrix_init_identity(&mx);
-  cairo_matrix_scale(&mx, slate->scale, slate->scale);
-  cairo_matrix_translate(&mx, slate->translate_x, slate->translate_y);
-  cairo_set_matrix(cr, &mx);
-  cairo_device_to_user(cr, x, y);
-  cairo_destroy(cr);
 }
 
 gboolean gtk_slate_button_release (GtkWidget	     *widget,
          GdkEventButton      *event){
 
   GtkSlate *slate = GTK_SLATE(widget);
-  int npoints;
-
-  if(event->button == 1){
-    double dx = event->x, dy = event->y;
-    gtk_slate_device_to_user(widget, &dx, &dy);
-    slate->curr_polyline.points.push_back(point_2d<sfloat>((sfloat)dx, (sfloat)dy));
-    gdk_window_invalidate_rect(widget->window, NULL, FALSE);
-  }
-  else if(event->button == 2){
-    slate->is_panning = FALSE;
-  }
-  else if(event->button == 3){
-    npoints = slate->curr_polyline.points.size();
-
-    if(slate->curr_polyline.points.size() > 1){
-      int ipoly = slate->ents.add_polyline(polyline_2d<sfloat>());
-      polyline_2d<sfloat>& pline = slate->ents.get_polyline(ipoly);
-      slate->curr_polyline.points.swap(pline.points);
-      gdk_window_invalidate_rect(widget->window, NULL, FALSE);
-    }
-    else if(npoints == 1){
-      slate->curr_polyline.points.clear();
-      gdk_window_invalidate_rect(widget->window, NULL, FALSE);
-    }
-
-  }
-  else
-    fprintf(stderr, "button %d\n", event->button);
+  cad_core::Mouse_button button = Mouse_button_from_Gtk(event->button);
+  slate->view->mouse_up(button, event->x, event->y);
 
   return TRUE;
+}
+
+cad_core::Mouse_scroll_direction Mouse_scroll_direction_from_Gtk(
+  GdkScrollDirection gdk_scroll_direction){
+
+  switch(gdk_scroll_direction){
+    case GDK_SCROLL_UP:
+      return cad_core::Mouse_scroll_direction_Up;
+    case GDK_SCROLL_DOWN:
+      return cad_core::Mouse_scroll_direction_Down;
+    default:
+      return cad_core::Mouse_scroll_direction_None;
+  }
+
 }
 
 gboolean gtk_slate_scroll_event(GtkWidget           *widget,
 					 GdkEventScroll      *event){
 
   GtkSlate *slate = GTK_SLATE(widget);
+  slate->view->mouse_scroll(
+    Mouse_scroll_direction_from_Gtk(event->direction),
+    event->x, event->y);
 
-  cairo_matrix_t mx1;
-  cairo_matrix_init_identity(&mx1);
-  cairo_matrix_scale(&mx1, slate->scale, slate->scale);
-  cairo_matrix_translate(&mx1, slate->translate_x, slate->translate_y);
-  cairo_matrix_invert(&mx1);
-
-  double x1 = event->x, y1 = event->y;
-  cairo_matrix_transform_point(&mx1, &x1, &y1);
-
-  if(event->direction == GDK_SCROLL_UP){
-    slate->scale *= 1.1;
-  }
-  else if(event->direction == GDK_SCROLL_DOWN){
-    slate->scale /= 1.1;
-  }
-  else
-    assert(0);
-
-  cairo_matrix_t mx2;
-  cairo_matrix_init_identity(&mx2);
-  cairo_matrix_scale(&mx2, slate->scale, slate->scale);
-  cairo_matrix_translate(&mx2, slate->translate_x, slate->translate_y);
-  cairo_matrix_invert(&mx2);
-  double x2 = event->x, y2 = event->y;
-  cairo_matrix_transform_point(&mx2, &x2, &y2);
-  slate->translate_x += x2 - x1;
-  slate->translate_y += y2 - y1;
-
-  gdk_window_invalidate_rect(widget->window, NULL, FALSE);
   return FALSE;
 }

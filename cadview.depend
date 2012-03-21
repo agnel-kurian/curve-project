@@ -2319,19 +2319,20 @@
 	<gtk/gtk.h>
 	"slate.h"
 
-1332233722 /home/agnel/projects/cpp/cadview/slate.h
+1332329663 /home/agnel/projects/cpp/cadview/slate.h
 	<gtk/gtk.h>
-	"../cadcore/cad_document.h"
+	"../cadcore/cad_gui_view.h"
+	"../cadcore/cad_gtk_adaptor.h"
 	<vector>
 
 1327999322 source:/home/agnel/projects/cpp/cadview/slate.C
 	"slate.h"
 
-1332318031 source:/home/agnel/projects/cpp/cadview/main.cpp
+1332331301 source:/home/agnel/projects/cpp/cadview/main.cpp
 	<gtk/gtk.h>
 	"slate.h"
 
-1332237741 source:/home/agnel/projects/cpp/cadview/slate.cpp
+1332329707 source:/home/agnel/projects/cpp/cadview/slate.cpp
 	"slate.h"
 	<assert.h>
 
@@ -2343,4 +2344,17 @@
 
 1332199924 /home/agnel/projects/cpp/cadcore/cad_primitives.h
 	<vector>
+
+1332338459 /home/agnel/projects/cpp/cadcore/cad_gui_view.h
+	"cad_document.h"
+	<cassert>
+	<cstdio>
+
+1332323827 /home/agnel/projects/cpp/cadcore/cad_gtk_adaptor.h
+	"gtk/gtk.h"
+	<cassert>
+	"cad_cairo_graphics.h"
+
+1332326069 /home/agnel/projects/cpp/cadcore/cad_cairo_graphics.h
+	"cad_primitives.h"
 

@@ -4,7 +4,9 @@
 
 #include <gtk/gtk.h>
 
-#include "../cadcore/cad_document.h"
+#include "../cadcore/cad_gui_view.h"
+#include "../cadcore/cad_gtk_adaptor.h"
+
 #include <vector>
 
 //template <typename T> class Entities {
@@ -31,16 +33,13 @@ using cad_core::point_2d;
 
 using std::vector;
 
+typedef cad_core::cad_gui_view<double,
+    cad_core::cad_gtk_adaptor<double> > view_type;
+
 struct _GtkSlate
 {
   GtkWidget widget;
-
-  double scale;
-  double translate_x;
-  double translate_y;
-  double old_translate_x;
-  double old_translate_y;
-  cad_document<sfloat> ents;
+  view_type* view;
   gboolean is_panning;
   double pan_start_x;
   double pan_start_y;
@@ -61,6 +60,7 @@ struct _GtkSlateClass
 
 GType      gtk_slate_get_type   (void) G_GNUC_CONST;
 GtkWidget* gtk_slate_new        (void);
+void gtk_slate_set_view(GtkWidget *widget, view_type *view);
 void gtk_slate_device_to_user(GtkWidget *widget, double *x, double *y);
 
 #ifndef GTK_DISABLE_DEPRECATED
