@@ -7,10 +7,10 @@
 	<File name="notes.txt" open="0" top="0" tabpos="2">
 		<Cursor position="310" topLine="0" />
 	</File>
-	<File name="slate.cpp" open="1" top="0" tabpos="5">
-		<Cursor position="8479" topLine="259" />
+	<File name="slate.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="6493" topLine="94" />
 	</File>
-	<File name="slate.h" open="0" top="0" tabpos="2">
-		<Cursor position="108" topLine="0" />
+	<File name="slate.h" open="1" top="0" tabpos="2">
+		<Cursor position="1210" topLine="29" />
 	</File>
 </CodeBlocks_layout_file>
