@@ -10,6 +10,8 @@ template<typename T> class cad_gtk_adaptor;
 template<typename T> class cad_cairo_graphics {
   cairo_t *cr;
 public:
+  typedef cairo_matrix_t matrix_type;
+
   cad_cairo_graphics(cad_gtk_adaptor<T> &gui) {
     cr = gdk_cairo_create(gui.get_widget()->window);
     cairo_set_line_width(cr, 1.0);
@@ -17,13 +19,16 @@ public:
     cairo_save(cr);
   }
 
-  void init(T scale, T translate_x, T translate_y){
+  void set_matrix(T scale, T translate_x, T translate_y){
     cairo_matrix_t mx;
     cairo_matrix_init_identity(&mx);
     cairo_matrix_scale(&mx, scale, scale);
     cairo_matrix_translate(&mx, translate_x, translate_y);
     cairo_set_matrix(cr, &mx);
+  }
 
+  void begin_paint(T scale, T translate_x, T translate_y){
+    set_matrix(scale, translate_x, translate_y);
     cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
   }
 
@@ -54,12 +59,47 @@ public:
   }
 
   void device_to_user(T *x, T *y){
-    cairo_device_to_user(cr, x, y);
+    double dx = *x;
+    double dy = *y;
+    cairo_device_to_user(cr, &dx, &dy);
+    *x = (T)dx;
+    *y = (T)dy;
+  }
+
+  static void set_matrix(cairo_matrix_t *mx,
+    double scale, double translate_x, double translate_y){
+
+    cairo_matrix_init_identity(mx);
+    cairo_matrix_scale(mx, scale, scale);
+    cairo_matrix_translate(mx, translate_x, translate_y);
+
+  }
+
+  static void invert_matrix(cairo_matrix_t *mx){
+    cairo_matrix_invert(mx);
+  }
+
+  static void transform_point(const cairo_matrix_t *mx, T* x, T* y){
+    double dx = *x;
+    double dy = *y;
+
+    cairo_matrix_transform_point(mx, &dx, &dy);
+
+    *x = (T)dx;
+    *y = (T)dy;
+
+  }
+
+  static void transform_point(const cairo_matrix_t *mx, point_2d<T>* p){
+    transform_point(mx, &p->x, &p->y);
+  }
+
+  void end_paint(){
+    cairo_restore(cr);
+    cairo_stroke(cr);
   }
 
   ~cad_cairo_graphics(){
-    cairo_restore(cr);
-    cairo_stroke(cr);
     cairo_destroy(cr);
   }
 };

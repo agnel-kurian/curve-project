@@ -20,10 +20,12 @@ public:
 
   int get_width(){
     assert(false);
+    return 0;
   }
 
   int get_height(){
     assert(false);
+    return 0;
   }
 
   void create_graphics(graphics_type *graphics){
@@ -33,13 +35,17 @@ public:
     *graphics = gr;
   }
 
-  void get_pointer(int *x, int *y){
+  void get_mouse_position(int *x, int *y){
     GdkModifierType mods;
     gdk_window_get_pointer(widget->window, x, y, &mods);
   }
 
   GtkWidget* get_widget(){
     return widget;
+  }
+
+  void invalidate(){
+    gdk_window_invalidate_rect(widget->window, NULL, FALSE);
   }
 };
 
