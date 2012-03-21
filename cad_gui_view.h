@@ -48,7 +48,6 @@ public:
   void paint(){
 
     graphics_type graphics(gui);
-
     graphics.begin_paint(scale, translate_x, translate_y);
 
     const vector< polyline_2d<T> >& lines =
@@ -94,6 +93,7 @@ public:
     if(is_panning){
       T dx = (T)x, dy = (T)y;
       graphics_type graphics(gui);
+      graphics.set_matrix(scale, translate_x, translate_y);
       graphics.device_to_user(&dx, &dy);
       translate_x += dx - pan_start.x;
       translate_y += dy - pan_start.y;
@@ -110,6 +110,7 @@ public:
       pan_start.x = (T)x;
       pan_start.y = (T)y;
       graphics_type graphics(gui);
+      graphics.set_matrix(scale, translate_x, translate_y);
       graphics.device_to_user(&pan_start.x, &pan_start.y);
     }
   }
@@ -117,6 +118,7 @@ public:
   void mouse_up(Mouse_button button, int x, int y){
     if(button == Mouse_button_Left){
       graphics_type graphics(gui);
+      graphics.set_matrix(scale, translate_x, translate_y);
       T dx = x, dy = y;
       graphics.device_to_user(&dx, &dy);
       new_polyline.points.push_back(point_2d<T>(dx, dy));
@@ -162,7 +164,7 @@ public:
       assert(false);
 
     matrix_type mx2;
-    graphics_type::set_matrix(&mx1, scale, translate_x, translate_y);
+    graphics_type::set_matrix(&mx2, scale, translate_x, translate_y);
     graphics_type::invert_matrix(&mx2);
     T x2 = x, y2 = y;
     graphics_type::transform_point(&mx2, &x2, &y2);
