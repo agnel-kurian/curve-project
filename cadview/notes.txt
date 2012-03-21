@@ -1,0 +1,30 @@
+GDK_BUTTON_RELEASE_MASK works only if GDK_BUTTON_PRESS_MASK is also
+set.
+
+gdk_window_invalidate_rect will invalidate entire window if second arg
+(rect) is NULL.
+
+//expose:
+  //draw all Entities
+  //draw current entity and line to mouse location
+
+create renderer classes which can be overridden for cairo, gdi+
+
+//right click ends line
+esc will cancel current command
+enter will complete current command
+//spin mouse wheel to zoom in/out
+keyboard event
+acquiring focus
+zoom, pan
+persistence:
+  json
+  protobuf
+  sqlite
+  postgresql
+  mysql
+
+undo queue
+copy/paste
+
+database in internal binary format
