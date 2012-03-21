@@ -36,7 +36,6 @@ gtk_slate_class_init (GtkSlateClass *klass)
 static void
 gtk_slate_init (GtkSlate *slate)
 {
-  slate->slate_data = NULL;
   slate->scale = 1.0;
   slate->translate_x = 0.0;
   slate->translate_y = 0.0;
@@ -142,15 +141,16 @@ gtk_slate_expose(GtkWidget *widget,
 
   cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
 
-  vector< polyline_2d<sfloat> > lines = slate->ents.get_polylines();
+  const vector< polyline_2d<sfloat> >& lines =
+    slate->ents.get_polylines();
   for(int i = 0, n = lines.size(); i < n; ++i){
-    vector< point_2d<sfloat> >& points = lines[i].points;
-    point_2d<sfloat>& p0 = points[0];
+    const vector< point_2d<sfloat> >& points = lines[i].points;
+    const point_2d<sfloat>& p0 = points[0];
     cairo_move_to(cr, (double)p0.x, (double)p0.y);
     for(int ipoint = 1, npoint = points.size();
       ipoint < npoint; ++ipoint){
 
-      point_2d<sfloat>& pi = points[ipoint];
+      const point_2d<sfloat>& pi = points[ipoint];
       cairo_line_to(cr, (double)pi.x, (double)pi.y);
 
     }

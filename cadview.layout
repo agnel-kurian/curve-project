@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="main.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="753" topLine="0" />
+	<File name="main.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="740" topLine="0" />
 	</File>
-	<File name="notes.txt" open="1" top="0" tabpos="3">
+	<File name="notes.txt" open="0" top="0" tabpos="2">
 		<Cursor position="310" topLine="0" />
 	</File>
-	<File name="slate.cpp" open="1" top="1" tabpos="4">
-		<Cursor position="8740" topLine="270" />
+	<File name="slate.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="9655" topLine="301" />
 	</File>
-	<File name="slate.h" open="1" top="0" tabpos="2">
-		<Cursor position="1271" topLine="15" />
+	<File name="slate.h" open="0" top="0" tabpos="2">
+		<Cursor position="108" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

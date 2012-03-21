@@ -40,7 +40,6 @@ struct _GtkSlate
   double translate_y;
   double old_translate_x;
   double old_translate_y;
-  gpointer GSEAL (slate_data);
   cad_document<sfloat> ents;
   gboolean is_panning;
   double pan_start_x;
